@@ -1,0 +1,24 @@
+# Backend API Requirements for Autism Assessment Tool
+# Privacy-first ML-powered REST API
+
+# Core Flask Framework
+Flask==2.3.3
+Flask-CORS==4.0.0
+
+# Machine Learning
+scikit-learn==1.3.0
+pandas==2.0.3
+numpy==1.24.3
+
+# Data Processing
+joblib==1.3.2
+
+# Utilities
+python-dateutil==2.8.2
+
+# Development (optional)
+pytest==7.4.0
+pytest-flask==1.2.1
+
+# Production (optional)
+gunicorn==21.2.0

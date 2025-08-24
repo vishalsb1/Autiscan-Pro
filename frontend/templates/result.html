@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Assessment Results - ASD Assessment Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #667eea;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Results Container */
+        .results-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .results-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .results-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-card.primary-result {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .result-card h3 {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Prediction Result */
+        .prediction-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .prediction-positive {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .prediction-negative {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-value.positive {
+            color: #e74c3c;
+        }
+
+        .result-value.negative {
+            color: #27ae60;
+        }
+
+        .result-subtitle {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Confidence Circle */
+        .confidence-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .confidence-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#667eea 0deg, #e9ecef 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .confidence-inner {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confidence-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .confidence-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Score Display */
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .score-interpretation {
+            color: #666;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        /* Risk Level */
+        .risk-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .risk-indicator {
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .risk-medium {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        /* Detailed Sections */
+        .detail-section {
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation-text {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+
+        .recommendations-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #555;
+            position: relative;
+            padding-left: 35px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .recommendations-list li:last-child {
+            border-bottom: none;
+        }
+
+        .recommendations-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 15px;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Text Analysis Styles */
+        .text-analysis-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            border: 1px solid #667eea;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .text-insights {
+            margin-bottom: 20px;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-item i {
+            color: #667eea;
+            margin-top: 2px;
+            font-size: 1.1rem;
+        }
+
+        .insight-item span {
+            flex: 1;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .detailed-analysis {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #667eea;
+        }
+
+        .detailed-analysis h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .analysis-detail {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Combined Analysis Styles */
+        .combined-assessment {
+            margin-bottom: 25px;
+        }
+
+        .assessment-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .assessment-banner h4 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .assessment-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .correlation-insights {
+            margin: 20px 0;
+        }
+
+        .correlation-insights h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .domain-analysis {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .domain-analysis h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .domain-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .domain-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .domain-score {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .consistency-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+        }
+
+        .consistency-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .consistency-value {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .consistency-high {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .consistency-moderate {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .consistency-low {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .consistency-unknown {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #e17055;
+            margin: 30px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .disclaimer i {
+            color: #e17055;
+            font-size: 1.5rem;
+            margin-top: 3px;
+        }
+
+        .disclaimer-content h4 {
+            color: #d35400;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .disclaimer-content p {
+            color: #8e44ad;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+        }
+
+        .footer p {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .results-title {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>ASD Assessment Results</h1>
+            </div>
+            <p class="subtitle">Your Comprehensive Autism Spectrum Assessment Report</p>
+        </header>
+
+        <!-- Results Container -->
+        <section class="results-container fade-in">
+            <div class="results-header">
+                <h2 class="results-title">
+                    <i class="fas fa-chart-line"></i>
+                    Assessment Complete
+                </h2>
+                <p class="results-subtitle">Based on your responses to the AQ-20 questionnaire and additional factors</p>
+            </div>
+            
+            <!-- Results Grid -->
+            <div class="results-grid">
+                <!-- Primary Prediction Result -->
+                <div class="result-card primary-result">
+                    <h3><i class="fas fa-brain"></i> AI Prediction</h3>
+                    {% if results.prediction == 'ASD' %}
+                    <div class="prediction-icon prediction-positive">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="result-value positive">ASD Traits Detected</div>
+                    <div class="result-subtitle">Higher likelihood of autism spectrum traits</div>
+                    {% else %}
+                    <div class="prediction-icon prediction-negative">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="result-value negative">No ASD Traits</div>
+                    <div class="result-subtitle">Low likelihood of autism spectrum traits</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Confidence Level -->
+                <div class="result-card">
+                    <h3><i class="fas fa-gauge-high"></i> Confidence Level</h3>
+                    <div class="confidence-container">
+                        <div class="confidence-circle" data-confidence="{{ results.confidence }}">
+                            <div class="confidence-inner">
+                                <div class="confidence-value">{{ results.confidence }}%</div>
+                                <div class="confidence-label">Confident</div>
+                            </div>
+                        </div>
+                        <div class="result-subtitle">
+                            {% if results.confidence >= 80 %}High confidence in prediction
+                            {% elif results.confidence >= 60 %}Good confidence in prediction
+                            {% else %}Moderate confidence in prediction{% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AQ-10 Score -->
+                <div class="result-card">
+                    <h3><i class="fas fa-calculator"></i> AQ-20 Score</h3>
+                    <div class="score-container">
+                        <div class="score-circle">
+                            <div class="score-value">{{ results.aq_score }}/20</div>
+                        </div>
+                        <div class="score-interpretation">
+                            {% if results.aq_score >= 12 %}Above threshold - further evaluation recommended
+                            {% elif results.aq_score >= 8 %}Moderate score - borderline range
+                            {% else %}Below threshold for autism spectrum traits{% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Risk Level -->
+                <div class="result-card">
+                    <h3><i class="fas fa-shield-alt"></i> Risk Assessment</h3>
+                    <div class="risk-container">
+                        {% if results.risk_class == 'high' or results.aq_score >= 12 %}
+                        <div class="risk-indicator risk-high">High Risk</div>
+                        <div class="result-subtitle">Significant indicators of autism spectrum traits</div>
+                        {% elif results.risk_class == 'medium' or results.aq_score >= 8 %}
+                        <div class="risk-indicator risk-medium">Medium Risk</div>
+                        <div class="result-subtitle">Some indicators of autism spectrum traits</div>
+                        {% else %}
+                        <div class="risk-indicator risk-low">Low Risk</div>
+                        <div class="result-subtitle">Minimal indicators of autism spectrum traits</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Explanation -->
+            <div class="detail-section">
+                <h3><i class="fas fa-lightbulb"></i> Detailed Analysis</h3>
+                <div class="explanation-text">
+                    {{ results.explanation }}
+                </div>
+                {% if results.api_used %}
+                <div class="explanation-text">
+                    <strong>AI Analysis:</strong> This assessment was processed using our machine learning model trained on clinical data. 
+                    The model analyzed {{ results.model_info.features_used or 'multiple' }} features to generate this prediction.
+                </div>
+                {% else %}
+                <div class="explanation-text">
+                    <strong>Note:</strong> This assessment used simplified processing. For more accurate results, 
+                    please ensure the backend system is available.
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="detail-section">
+                <h3><i class="fas fa-list-check"></i> Recommendations</h3>
+                <ul class="recommendations-list">
+                    {% for recommendation in results.recommendations %}
+                        <li>{{ recommendation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Text Analysis Insights (if available) -->
+            {% if results.text_analysis and results.text_analysis.overall_insights %}
+            <div class="detail-section text-analysis-section">
+                <h3><i class="fas fa-comment-alt"></i> Text Analysis Insights</h3>
+                <div class="text-insights">
+                    {% for insight in results.text_analysis.overall_insights %}
+                        <div class="insight-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>{{ insight }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {% if results.text_analysis.analysis_results %}
+                <div class="detailed-analysis">
+                    <h4>Response Analysis Details:</h4>
+                    {% for question_id, analysis in results.text_analysis.analysis_results.items() %}
+                        <div class="analysis-detail">
+                            <strong>{{ analysis.top_category.title() }} Theme</strong> 
+                            ({{ analysis.confidence }}% similarity)
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Combined Analysis (AQ + Text) -->
+            {% if results.correlation_analysis %}
+            <div class="detail-section text-analysis-section">
+                <h3><i class="fas fa-chart-line"></i> Combined Analysis: AQ Scores + Text Responses</h3>
+                
+                <!-- Final Assessment -->
+                {% if results.combined_assessment %}
+                <div class="combined-assessment">
+                    <div class="assessment-banner">
+                        <h4><i class="fas fa-brain"></i> Overall Assessment</h4>
+                        <p class="assessment-text">{{ results.combined_assessment }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Correlation Insights -->
+                <div class="correlation-insights">
+                    <h4><i class="fas fa-puzzle-piece"></i> How Your Text and AQ Responses Compare:</h4>
+                    {% for insight in results.correlation_analysis.correlation_insights %}
+                        <div class="insight-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{{ insight }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Domain Analysis -->
+                {% if results.correlation_analysis.domain_scores %}
+                <div class="domain-analysis">
+                    <h4><i class="fas fa-chart-bar"></i> AQ Domain Breakdown:</h4>
+                    <div class="domain-grid">
+                        <div class="domain-item">
+                            <span class="domain-label">Social Communication:</span>
+                            <span class="domain-score">{{ results.correlation_analysis.domain_scores.social_communication }}/15</span>
+                        </div>
+                        <div class="domain-item">
+                            <span class="domain-label">Routine & Flexibility:</span>
+                            <span class="domain-score">{{ results.correlation_analysis.domain_scores.routine_flexibility }}/15</span>
+                        </div>
+                        <div class="domain-item">
+                            <span class="domain-label">Attention to Detail:</span>
+                            <span class="domain-score">{{ results.correlation_analysis.domain_scores.attention_detail }}/15</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Consistency Badge -->
+                <div class="consistency-badge">
+                    <span class="consistency-label">Data Consistency:</span>
+                    <span class="consistency-value consistency-{{ results.correlation_analysis.overall_consistency }}">
+                        {{ results.correlation_analysis.overall_consistency.upper() }}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Privacy Confirmation -->
+            <div class="disclaimer">
+                <i class="fas fa-shield-alt"></i>
+                <div class="disclaimer-content">
+                    <h4>Your Privacy is Protected</h4>
+                    <p>These results were generated through private processing. Your responses have not been stored, logged, or shared with anyone. When you leave this page, all data is permanently discarded.</p>
+                </div>
+            </div>
+            
+            <!-- Important Disclaimer -->
+            <div class="disclaimer">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="disclaimer-content">
+                    <h4>Important Medical Disclaimer</h4>
+                    <p>This assessment is a screening tool only and should not replace professional medical evaluation. If you have concerns about autism spectrum traits, please consult with a qualified healthcare professional, psychologist, or psychiatrist who specializes in autism spectrum disorders for a comprehensive assessment.</p>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i>
+                    Take Another Private Assessment
+                </a>
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i class="fas fa-print"></i>
+                    Save/Print Results
+                </button>
+                <a href="/privacy" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More About ASD
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 ASD Assessment Tool. This tool is for educational and screening purposes only.</p>
+            <p>Always consult with qualified healthcare professionals for proper autism assessment and diagnosis.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate confidence circle
+            const confidenceCircle = document.querySelector('.confidence-circle');
+            if (confidenceCircle) {
+                const percentage = parseInt(confidenceCircle.getAttribute('data-confidence')) || 0;
+                const degrees = (percentage / 100) * 360;
+                confidenceCircle.style.background = `conic-gradient(#667eea ${degrees}deg, #e9ecef ${degrees}deg)`;
+            }
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.result-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Smooth scroll for any anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Function to update results dynamically (for integration with your Flask app)
+        function updateResults(data) {
+            // Update prediction
+            const predictionValue = document.querySelector('.result-value');
+            const predictionIcon = document.querySelector('.prediction-icon');
+            const predictionSubtitle = document.querySelector('.result-subtitle');
+            
+            if (data.prediction === 'ASD') {
+                predictionValue.textContent = 'ASD Traits Detected';
+                predictionValue.className = 'result-value positive';
+                predictionIcon.className = 'prediction-icon prediction-positive';
+                predictionIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                predictionSubtitle.textContent = 'Higher likelihood of autism spectrum traits';
+            }
+            
+            // Update confidence
+            const confidenceValue = document.querySelector('.confidence-value');
+            const confidenceCircle = document.querySelector('.confidence-circle');
+            if (data.confidence) {
+                confidenceValue.textContent = Math.round(data.confidence * 100) + '%';
+                const degrees = data.confidence * 360;
+                confidenceCircle.style.background = `conic-gradient(#667eea ${degrees}deg, #e9ecef ${degrees}deg)`;
+            }
+            
+            // Update score
+            const scoreValue = document.querySelector('.score-value');
+            if (data.aq_score !== undefined) {
+                scoreValue.textContent = `${data.aq_score}/10`;
+            }
+            
+            // Update risk level
+            const riskIndicator = document.querySelector('.risk-indicator');
+            if (data.aq_score >= 6) {
+                riskIndicator.textContent = 'HIGH RISK';
+                riskIndicator.className = 'risk-indicator risk-high';
+            } else if (data.aq_score >= 4) {
+                riskIndicator.textContent = 'MEDIUM RISK';
+                riskIndicator.className = 'risk-indicator risk-medium';
+            }
+        }
+    </script>
+</body>
+</html>

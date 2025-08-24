@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autism Spectrum Assessment Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>ASD Assessment Tool</h1>
+                </div>
+                <p class="subtitle">Autism Spectrum Disorder Screening Questionnaire</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Introduction Section -->
+            <section class="intro-section">
+                <div class="intro-card">
+                    <h2><i class="fas fa-info-circle"></i> About This Assessment</h2>
+                    <p>This tool uses the AQ-10 (Autism Quotient-10) screening questionnaire combined with machine learning to provide an initial assessment for autism spectrum traits. Please answer all questions honestly based on your typical experiences.</p>
+                    <div class="disclaimer">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Important:</strong> This is a screening tool only and should not replace professional medical evaluation.
+                    </div>
+                    <div class="privacy-notice">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>Privacy Guarantee:</strong> Your responses are processed privately and are never stored, saved, or shared with anyone.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assessment Form -->
+            <section class="assessment-section">
+                <!-- Privacy Reminder -->
+                <div class="privacy-reminder">
+                    <i class="fas fa-lock"></i>
+                    <span>🔒 Your responses are completely private and will be discarded after results are shown</span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <h3><i class="fas fa-chart-line"></i> Assessment Progress</h3>
+                        <span class="progress-text">0/18 fields completed</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <form id="assessmentForm" class="assessment-form" action="/result" method="POST">
+                    <!-- AQ-10 Questions -->
+                    <div class="form-group">
+                        <h3><i class="fas fa-clipboard-list"></i> AQ-10 Screening Questions</h3>
+                        <p class="section-description">Please indicate how much you agree with each statement:</p>
+                        
+                        <div class="questions-container">
+                            {% for question in questions %}
+                            <div class="question-card">
+                                <div class="question-header">
+                                    <h4>Question {{ loop.index }}</h4>
+                                    <span class="question-number">{{ loop.index }}/10</span>
+                                </div>
+                                <p class="question-text">{{ question.question }}</p>
+                                <p class="question-description">{{ question.description }}</p>
+                                
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="{{ question.id }}" value="3" required>
+                                        <span class="radio-custom"></span>
+                                        <span class="radio-label">Definitely Agree</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="{{ question.id }}" value="2" required>
+                                        <span class="radio-custom"></span>
+                                        <span class="radio-label">Slightly Agree</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="{{ question.id }}" value="1" required>
+                                        <span class="radio-custom"></span>
+                                        <span class="radio-label">Slightly Disagree</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="{{ question.id }}" value="0" required>
+                                        <span class="radio-custom"></span>
+                                        <span class="radio-label">Definitely Disagree</span>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Demographic Information -->
+                    <div class="form-group">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <p class="section-description">This information helps improve prediction accuracy:</p>
+                        
+                        <div class="demographics-grid">
+                            <div class="input-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" min="18" max="100" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="m">Male</option>
+                                    <option value="f">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="ethnicity">Ethnicity</label>
+                                <select id="ethnicity" name="ethnicity" required>
+                                    <option value="">Select ethnicity</option>
+                                    <option value="White-European">White-European</option>
+                                    <option value="Asian">Asian</option>
+                                    <option value="Latino">Latino</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Middle Eastern">Middle Eastern</option>
+                                    <option value="Hispanic">Hispanic</option>
+                                    <option value="South Asian">South Asian</option>
+                                    <option value="Turkish">Turkish</option>
+                                    <option value="Native Indian">Native Indian</option>
+                                    <option value="Pacifica">Pacifica</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="contry_of_res">Country of Residence</label>
+                                <select id="contry_of_res" name="contry_of_res" required>
+                                    <option value="">Select country</option>
+                                    <option value="United States">United States</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="France">France</option>
+                                    <option value="Spain">Spain</option>
+                                    <option value="Italy">Italy</option>
+                                    <option value="Brazil">Brazil</option>
+                                    <option value="India">India</option>
+                                    <option value="China">China</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="jaundice">History of Jaundice</label>
+                                <select id="jaundice" name="jaundice" required>
+                                    <option value="">Select option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="austim">Family History of Autism</label>
+                                <select id="austim" name="austim" required>
+                                    <option value="">Select option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="used_app_before">Used Screening App Before</label>
+                                <select id="used_app_before" name="used_app_before" required>
+                                    <option value="">Select option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="relation">Completing Assessment For</label>
+                                <select id="relation" name="relation" required>
+                                    <option value="">Select option</option>
+                                    <option value="Self">Self</option>
+                                    <option value="Parent">Parent</option>
+                                    <option value="Relative">Relative</option>
+                                    <option value="Health care professional">Health care professional</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Analysis Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-comment-alt"></i> Personal Insights (Optional)</h3>
+                        <p class="section-desc">These questions help us understand your unique perspective. Please answer in your own words (one sentence or more):</p>
+                        
+                        <div class="text-questions">
+                            <div class="text-question">
+                                <label for="text_social">How do you feel in social situations or group conversations?</label>
+                                <textarea 
+                                    id="text_social" 
+                                    name="text_social" 
+                                    placeholder="For example: I find it easier to talk one-on-one than in groups..."
+                                    rows="3"
+                                    maxlength="500"
+                                ></textarea>
+                                <div class="char-count">
+                                    <span class="current-count">0</span>/500 characters
+                                </div>
+                            </div>
+
+                            <div class="text-question">
+                                <label for="text_interests">What are you really interested in or passionate about?</label>
+                                <textarea 
+                                    id="text_interests" 
+                                    name="text_interests" 
+                                    placeholder="For example: I love learning everything about trains and can talk about them for hours..."
+                                    rows="3"
+                                    maxlength="500"
+                                ></textarea>
+                                <div class="char-count">
+                                    <span class="current-count">0</span>/500 characters
+                                </div>
+                            </div>
+
+                            <div class="text-question">
+                                <label for="text_daily">Describe your ideal daily routine or what helps you function best:</label>
+                                <textarea 
+                                    id="text_daily" 
+                                    name="text_daily" 
+                                    placeholder="For example: I work better when I know what to expect and have a clear schedule..."
+                                    rows="3"
+                                    maxlength="500"
+                                ></textarea>
+                                <div class="char-count">
+                                    <span class="current-count">0</span>/500 characters
+                                </div>
+                            </div>
+
+                            <div class="text-question">
+                                <label for="text_sensory">Describe any sounds, textures, lights, or other sensory experiences that affect you:</label>
+                                <textarea 
+                                    id="text_sensory" 
+                                    name="text_sensory" 
+                                    placeholder="For example: Loud sudden noises make me feel overwhelmed, but I love soft textures..."
+                                    rows="3"
+                                    maxlength="500"
+                                ></textarea>
+                                <div class="char-count">
+                                    <span class="current-count">0</span>/500 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <i class="fas fa-brain"></i>
+                            <span>Analyze Assessment</span>
+                            <div class="btn-loader hidden">
+                                <span>Analyzing</span>
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="resultsSection">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h2><i class="fas fa-chart-line"></i> Assessment Results</h2>
+                    </div>
+                    
+                    <div class="results-grid">
+                        <div class="result-card primary-result">
+                            <h3>Prediction</h3>
+                            <div class="result-value" id="predictionResult"></div>
+                            <div class="result-subtitle" id="predictionSubtitle"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h3>Confidence Level</h3>
+                            <div class="confidence-circle">
+                                <div class="confidence-value" id="confidenceValue"></div>
+                                <div class="confidence-label">Confidence</div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h3>AQ-10 Score</h3>
+                            <div class="score-display">
+                                <span class="score-value" id="aqScore"></span>
+                                <span class="score-total">/10</span>
+                            </div>
+                            <div class="score-interpretation" id="scoreInterpretation"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h3>Risk Level</h3>
+                            <div class="risk-indicator" id="riskLevel"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation-section">
+                        <h3><i class="fas fa-lightbulb"></i> Detailed Explanation</h3>
+                        <div class="explanation-text" id="explanationText"></div>
+                    </div>
+                    
+                    <div class="recommendations-section">
+                        <h3><i class="fas fa-list-check"></i> Recommendations</h3>
+                        <ul class="recommendations-list" id="recommendationsList"></ul>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn-secondary" onclick="resetAssessment()">
+                            <i class="fas fa-redo"></i> Take Another Assessment
+                        </button>
+                        <button type="button" class="btn-primary" onclick="printResults()">
+                            <i class="fas fa-print"></i> Save/Print Results
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 ASD Assessment Tool. This tool is for educational purposes only.</p>
+                <p>Always consult with qualified healthcare professionals for proper autism assessment and diagnosis.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=2"></script>
+</body>
+</html>
